@@ -10,11 +10,12 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY", "change-this-development-key")
 def get_db_connection():
     """Create a fresh MySQL connection using environment variables."""
     return mysql.connector.connect(
-        host=os.getenv("DB_HOST", "localhost"),
-        user=os.getenv("DB_USER", "root"),
-        password=os.getenv("DB_PASSWORD", ""),
-        database=os.getenv("DB_NAME", "hotel_management"),
-        port=int(os.getenv("DB_PORT", "3306"))
+        host=os.environ.get("DB_HOST"),
+        user=os.environ.get("DB_USER"),
+        password=os.environ.get("DB_PASSWORD"),
+        database=os.environ.get("DB_NAME"),
+        port=int(os.environ.get("DB_PORT", "12887")),
+        ssl_disabled=False
     )
 
 def fetch_all(query, params=()):
