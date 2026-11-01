@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}New Booking | StayWise{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">RESERVATIONS</p><h1>New booking</h1><p class="muted">Check-out date must be after check-in date.</p></div></section>
+{% if not customers %}<div class="flash error">Add a customer before creating a booking. <a href="{{ url_for('add_customer') }}">Add customer →</a></div>{% endif %}
+{% if not rooms %}<div class="flash error">Add a room before creating a booking. <a href="{{ url_for('add_room') }}">Add room →</a></div>{% endif %}
+<form class="panel form-panel" method="post">
+  <div class="form-grid">
+    <label>Customer *<select name="customer_id" required>{% for c in customers %}<option value="{{ c.customer_id }}">{{ c.name }} (#{{ c.customer_id }})</option>{% endfor %}</select></label>
+    <label>Room *<select name="room_id" required>{% for r in rooms %}<option value="{{ r.room_id }}">Room {{ r.room_number }} · {{ r.room_type }} · ₹{{ r.price_per_night }}/night</option>{% endfor %}</select></label>
+    <label>Check-in date *<input type="date" name="check_in" required></label>
+    <label>Check-out date *<input type="date" name="check_out" required></label>
+  </div>
+  <div class="form-actions"><a class="button secondary" href="{{ url_for('bookings') }}">Cancel</a><button class="button" type="submit" {% if not customers or not rooms %}disabled{% endif %}>Create booking</button></div>
+</form>
+{% endblock %}

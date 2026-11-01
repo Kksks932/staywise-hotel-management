@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if room else 'Add' }} Room | StayWise{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">ROOM INVENTORY</p><h1>{{ 'Edit room' if room else 'Add room' }}</h1></div></section>
+<form class="panel form-panel" method="post">
+  <div class="form-grid">
+    <label>Room number *<input name="room_number" required maxlength="10" value="{{ room.room_number if room else '' }}"></label>
+    <label>Room type *<select name="room_type" required>{% for t in ['Single','Double','Deluxe','Suite','Family'] %}<option value="{{ t }}" {% if room and room.room_type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></label>
+    <label>Price per night (₹) *<input type="number" name="price_per_night" min="0" step="0.01" required value="{{ room.price_per_night if room else '' }}"></label>
+    <label>Status<select name="status">{% for s in ['Available','Occupied','Maintenance'] %}<option value="{{ s }}" {% if room and room.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></label>
+  </div>
+  <div class="form-actions"><a class="button secondary" href="{{ url_for('rooms') }}">Cancel</a><button class="button" type="submit">Save room</button></div>
+</form>
+{% endblock %}

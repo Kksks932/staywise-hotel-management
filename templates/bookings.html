@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Bookings | StayWise{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">RESERVATIONS</p><h1>Bookings</h1><p class="muted">Create and manage guest reservations.</p></div><a class="button" href="{{ url_for('add_booking') }}">＋ New booking</a></section>
+<section class="panel">
+{% if bookings %}<div class="table-wrap"><table><thead><tr><th>ID</th><th>Customer</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for b in bookings %}<tr><td>#{{ b.booking_id }}</td><td class="strong">{{ b.customer_name }}</td><td>{{ b.room_number }} <span class="subtext">{{ b.room_type }}</span></td><td>{{ b.check_in }}</td><td>{{ b.check_out }}</td><td><span class="badge">{{ b.status }}</span></td><td class="actions"><a class="button small secondary" href="{{ url_for('edit_booking', booking_id=b.booking_id) }}">Edit</a><form method="post" action="{{ url_for('delete_booking', booking_id=b.booking_id) }}" onsubmit="return confirm('Permanently delete this booking record?')"><button class="button small danger" type="submit">Delete</button></form></td></tr>{% endfor %}
+</tbody></table></div>{% else %}<div class="empty"><h3>No bookings yet</h3><p>Add a customer and create a booking.</p></div>{% endif %}
+</section>
+{% endblock %}

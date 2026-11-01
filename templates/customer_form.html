@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if customer else 'Add' }} Customer | StayWise{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">GUEST DIRECTORY</p><h1>{{ 'Edit customer' if customer else 'Add customer' }}</h1><p class="muted">Fields marked * are required.</p></div></section>
+<form class="panel form-panel" method="post">
+  <div class="form-grid">
+    <label>Full name *<input name="name" required maxlength="100" value="{{ customer.name if customer else '' }}"></label>
+    <label>Phone<input name="phone" maxlength="20" value="{{ customer.phone if customer else '' }}"></label>
+    <label>Email<input type="email" name="email" maxlength="120" value="{{ customer.email if customer else '' }}"></label>
+    <label class="full">Address<input name="address" maxlength="255" value="{{ customer.address if customer else '' }}"></label>
+  </div>
+  <div class="form-actions"><a class="button secondary" href="{{ url_for('customers') }}">Cancel</a><button class="button" type="submit">Save customer</button></div>
+</form>
+{% endblock %}

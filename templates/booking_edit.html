@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Edit Booking | StayWise{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">RESERVATIONS</p><h1>Edit booking #{{ booking.booking_id }}</h1></div></section>
+<form class="panel form-panel" method="post">
+  <div class="form-grid">
+    <label>Customer *<select name="customer_id" required>{% for c in customers %}<option value="{{ c.customer_id }}" {% if c.customer_id == booking.customer_id %}selected{% endif %}>{{ c.name }} (#{{ c.customer_id }})</option>{% endfor %}</select></label>
+    <label>Room *<select name="room_id" required>{% for r in rooms %}<option value="{{ r.room_id }}" {% if r.room_id == booking.room_id %}selected{% endif %}>Room {{ r.room_number }} · {{ r.room_type }} · ₹{{ r.price_per_night }}/night</option>{% endfor %}</select></label>
+    <label>Check-in date *<input type="date" name="check_in" required value="{{ booking.check_in }}"></label>
+    <label>Check-out date *<input type="date" name="check_out" required value="{{ booking.check_out }}"></label>
+    <label>Status<select name="status">{% for s in ['Booked','Checked-in','Checked-out','Cancelled'] %}<option value="{{ s }}" {% if booking.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}</select></label>
+  </div>
+  <div class="form-actions"><a class="button secondary" href="{{ url_for('bookings') }}">Cancel</a><button class="button" type="submit">Update booking</button></div>
+</form>
+{% endblock %}
