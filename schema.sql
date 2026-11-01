@@ -1,5 +1,4 @@
-CREATE DATABASE IF NOT EXISTS hotel_management;
-USE hotel_management;
+USE defaultdb;
 
 CREATE TABLE IF NOT EXISTS customers (
     customer_id INT AUTO_INCREMENT PRIMARY KEY,
