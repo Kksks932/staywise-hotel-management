@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Rooms | StayWise{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">ROOM INVENTORY</p><h1>Rooms</h1><p class="muted">Manage room types, rates, and room status.</p></div><a class="button" href="{{ url_for('add_room') }}">＋ Add room</a></section>
+<section class="panel">
+{% if rooms %}<div class="table-wrap"><table><thead><tr><th>ID</th><th>Room no.</th><th>Type</th><th>Price / night</th><th>Status</th><th>Actions</th></tr></thead><tbody>
+{% for r in rooms %}<tr><td>#{{ r.room_id }}</td><td class="strong">{{ r.room_number }}</td><td>{{ r.room_type }}</td><td>₹{{ '%.2f'|format(r.price_per_night) }}</td><td><span class="badge">{{ r.status }}</span></td><td class="actions"><a class="button small secondary" href="{{ url_for('edit_room', room_id=r.room_id) }}">Edit</a><form method="post" action="{{ url_for('delete_room', room_id=r.room_id) }}" onsubmit="return confirm('Delete this room?')"><button class="button small danger" type="submit">Delete</button></form></td></tr>{% endfor %}
+</tbody></table></div>{% else %}<div class="empty"><h3>No rooms added</h3><p>Add your first room.</p></div>{% endif %}
+</section>
+{% endblock %}
