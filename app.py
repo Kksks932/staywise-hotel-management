@@ -1,8 +1,15 @@
 import os
 from datetime import date
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, flash
 import mysql.connector
 from mysql.connector import Error
+
+load_dotenv()
+print("DB_HOST:", os.getenv("DB_HOST"))
+print("DB_PORT:", os.getenv("DB_PORT"))
+print("DB_USER:", os.getenv("DB_USER"))
+print("DB_NAME:", os.getenv("DB_NAME"))
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "change-this-development-key")
@@ -58,7 +65,13 @@ def dashboard():
         JOIN rooms r ON r.room_id = b.room_id
         ORDER BY b.booking_id DESC LIMIT 5
     """)
-    return render_template("dashboard.html", stats=stats, recent=recent)
+    featured_rooms = fetch_all("""
+        SELECT room_id, room_number, room_type, price_per_night, status
+        FROM rooms
+        ORDER BY CASE WHEN status = 'Available' THEN 0 ELSE 1 END, room_number
+        LIMIT 8
+    """)
+    return render_template("dashboard.html", stats=stats, recent=recent, featured_rooms=featured_rooms)
 
 # ---------------- Customers: CRUD ----------------
 @app.route("/customers")
@@ -120,8 +133,17 @@ def delete_customer(customer_id):
 # ---------------- Rooms: CRUD ----------------
 @app.route("/rooms")
 def rooms():
-    rows = fetch_all("SELECT * FROM rooms ORDER BY room_number")
-    return render_template("rooms.html", rooms=rows)
+    search_term = request.args.get("q", "").strip()
+    if search_term:
+        pattern = f"%{search_term}%"
+        rows = fetch_all("""
+            SELECT * FROM rooms
+            WHERE room_number LIKE %s OR room_type LIKE %s OR status LIKE %s
+            ORDER BY room_number
+        """, (pattern, pattern, pattern))
+    else:
+        rows = fetch_all("SELECT * FROM rooms ORDER BY room_number")
+    return render_template("rooms.html", rooms=rows, search_term=search_term)
 
 @app.route("/rooms/add", methods=["GET", "POST"])
 def add_room():

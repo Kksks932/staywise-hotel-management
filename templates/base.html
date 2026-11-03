@@ -3,31 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Hotel Management System{% endblock %}</title>
+  <meta name="theme-color" content="#ffffff">
+  <title>{% block title %}StayWise | Find your stay{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="{{ url_for('dashboard') }}">🏨 StayWise <span>Hotel Management</span></a>
-    <nav>
-      <a href="{{ url_for('dashboard') }}">Dashboard</a>
-      <a href="{{ url_for('customers') }}">Customers</a>
+    <a class="brand" href="{{ url_for('dashboard') }}" aria-label="StayWise home"><span class="brand-mark">⌂</span><span class="brand-copy"><strong>StayWise</strong><small>Find your kind of stay</small></span></a>
+    <nav class="main-nav" aria-label="Main navigation">
+      <a class="nav-home" href="{{ url_for('dashboard') }}">Explore stays</a>
       <a href="{{ url_for('rooms') }}">Rooms</a>
       <a href="{{ url_for('bookings') }}">Bookings</a>
+      <a href="{{ url_for('customers') }}">Guests</a>
     </nav>
+    <a class="profile-link" href="{{ url_for('add_booking') }}"><span class="profile-icon">♙</span><span>New booking</span></a>
   </header>
   <main class="container">
     {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="flash-list">
-          {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
+      {% if messages %}<div class="flash-list">{% for category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}
     {% endwith %}
     {% block content %}{% endblock %}
   </main>
-  <footer>StayWise · DBMS College Project</footer>
+  <footer><span class="footer-brand">StayWise</span><span>Thoughtful stays, made simple.</span><span>DBMS College Project</span></footer>
 </body>
 </html>

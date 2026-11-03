@@ -1,22 +1,62 @@
 {% extends "base.html" %}
-{% block title %}Dashboard | StayWise{% endblock %}
+{% block title %}Explore stays | StayWise{% endblock %}
 {% block content %}
-<section class="page-heading">
-  <div><p class="eyebrow">OVERVIEW</p><h1>Hotel Dashboard</h1><p class="muted">Manage your rooms, guests, and reservations in one place.</p></div>
-  <a class="button" href="{{ url_for('add_booking') }}">＋ New booking</a>
+<section class="hero">
+  <div class="hero-shade"></div>
+  <div class="hero-content">
+    <p class="hero-kicker">YOUR NEXT GETAWAY STARTS HERE</p>
+    <h1>Find a stay that<br><em>feels like you.</em></h1>
+    <p class="hero-subtitle">Handpicked rooms. Memorable places. A better way to stay.</p>
+    <form class="search-bar" action="{{ url_for('rooms') }}" method="get">
+      <label class="search-field destination"><span class="search-label">WHERE</span><span class="search-input-wrap">⌖ <input name="q" placeholder="Search rooms or room type" aria-label="Search rooms"></span></label>
+      <div class="search-divider"></div>
+      <label class="search-field"><span class="search-label">YOUR STAY</span><span class="search-value">Explore available rooms</span></label>
+      <button class="search-button" type="submit">⌕ <span>Explore</span></button>
+    </form>
+  </div>
 </section>
-<section class="stats">
-  <article class="stat-card"><span class="stat-icon">♙</span><p>Total customers</p><strong>{{ stats.customers }}</strong><a href="{{ url_for('customers') }}">Manage customers →</a></article>
-  <article class="stat-card"><span class="stat-icon">▦</span><p>Total rooms</p><strong>{{ stats.rooms }}</strong><a href="{{ url_for('rooms') }}">Manage rooms →</a></article>
-  <article class="stat-card"><span class="stat-icon">▤</span><p>Total bookings</p><strong>{{ stats.bookings }}</strong><a href="{{ url_for('bookings') }}">View bookings →</a></article>
-  <article class="stat-card"><span class="stat-icon">✓</span><p>Active bookings</p><strong>{{ stats.active_bookings }}</strong><span class="small-muted">Booked or checked in</span></article>
+<section class="welcome-row">
+  <div><p class="eyebrow">A LITTLE SPACE TO UNWIND</p><h2>Discover your next stay</h2><p class="muted">Find the right room for your next story.</p></div>
+  <a class="text-link" href="{{ url_for('rooms') }}">View all rooms <span>→</span></a>
 </section>
-<section class="panel">
-  <div class="panel-heading"><div><h2>Recent bookings</h2><p class="muted">The latest reservations added to the system.</p></div><a class="text-link" href="{{ url_for('bookings') }}">View all →</a></div>
-  {% if recent %}
-  <div class="table-wrap"><table><thead><tr><th>Booking</th><th>Customer</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Status</th></tr></thead><tbody>
-  {% for b in recent %}<tr><td>#{{ b.booking_id }}</td><td>{{ b.customer_name }}</td><td>{{ b.room_number }}</td><td>{{ b.check_in }}</td><td>{{ b.check_out }}</td><td><span class="badge">{{ b.status }}</span></td></tr>{% endfor %}
-  </tbody></table></div>
-  {% else %}<div class="empty"><div>▤</div><h3>No bookings yet</h3><p>Add a customer, then create your first booking.</p><a class="button" href="{{ url_for('add_booking') }}">Create booking</a></div>{% endif %}
+<section class="category-row" aria-label="Stay categories">
+  <a class="category active" href="{{ url_for('rooms') }}"><span>⌂</span><small>All stays</small></a>
+  <a class="category" href="{{ url_for('rooms') }}"><span>▥</span><small>Hotels</small></a>
+  <a class="category" href="{{ url_for('rooms') }}"><span>♧</span><small>Deluxe</small></a>
+  <a class="category" href="{{ url_for('rooms') }}"><span>♙</span><small>Family stays</small></a>
+  <a class="category" href="{{ url_for('rooms') }}"><span>✧</span><small>Suites</small></a>
+  <a class="category" href="{{ url_for('rooms') }}"><span>♡</span><small>Guest favourites</small></a>
+</section>
+<section class="section-heading"><div><h2>Rooms to make yourself at home</h2><p class="muted">A glimpse of what StayWise has to offer.</p></div><a class="outline-button" href="{{ url_for('rooms') }}">Manage rooms</a></section>
+<section class="room-grid">
+  {% for r in featured_rooms %}
+  <article class="room-card">
+    <a class="room-image image-{{ loop.index0 % 4 }}" href="{{ url_for('edit_room', room_id=r.room_id) }}" aria-label="Edit room {{ r.room_number }}">
+      <span class="image-tag">{{ r.status }}</span><span class="heart" aria-hidden="true">♡</span>
+    </a>
+    <div class="room-card-body">
+      <div class="room-title-row"><h3>{{ r.room_type }} Room</h3><span class="rating">★ <b>4.{{ 8 - (loop.index0 % 3) }}</b></span></div>
+      <p class="room-location">Room {{ r.room_number }} · StayWise Hotel</p>
+      <p class="room-note">Comfortable space for your next stay</p>
+      <p class="room-price"><strong>₹{{ '%.0f'|format(r.price_per_night) }}</strong> <span>night</span></p>
+      <a class="card-action" href="{{ url_for('edit_room', room_id=r.room_id) }}">View room details <span>→</span></a>
+    </div>
+  </article>
+  {% else %}
+  <div class="empty empty-wide"><div class="empty-icon">⌂</div><h3>Your first stay starts here</h3><p>Add rooms to your inventory and they'll appear here.</p><a class="button" href="{{ url_for('add_room') }}">＋ Add your first room</a></div>
+  {% endfor %}
+</section>
+<section class="dashboard-strip">
+  <div><p class="eyebrow">YOUR STAYWISE AT A GLANCE</p><h2>Everything in one place.</h2><p class="muted">Manage your guests, rooms and reservations with ease.</p></div>
+  <div class="mini-stats">
+    <a href="{{ url_for('customers') }}"><span>Guests</span><strong>{{ stats.customers }}</strong></a>
+    <a href="{{ url_for('rooms') }}"><span>Rooms</span><strong>{{ stats.rooms }}</strong></a>
+    <a href="{{ url_for('bookings') }}"><span>Bookings</span><strong>{{ stats.bookings }}</strong></a>
+    <a href="{{ url_for('bookings') }}"><span>Active</span><strong>{{ stats.active_bookings }}</strong></a>
+  </div>
+</section>
+<section class="panel recent-panel">
+  <div class="panel-heading"><div><p class="eyebrow">THE LATEST</p><h2>Recent bookings</h2><p class="muted">Your latest reservations, all together.</p></div><a class="text-link" href="{{ url_for('bookings') }}">View all bookings →</a></div>
+  {% if recent %}<div class="table-wrap"><table><thead><tr><th>Booking</th><th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Status</th></tr></thead><tbody>{% for b in recent %}<tr><td class="strong">#{{ b.booking_id }}</td><td>{{ b.customer_name }}</td><td>{{ b.room_number }}</td><td>{{ b.check_in }}</td><td>{{ b.check_out }}</td><td><span class="badge">{{ b.status }}</span></td></tr>{% endfor %}</tbody></table></div>{% else %}<div class="empty"><h3>No bookings just yet</h3><p>Create your first reservation to see it here.</p><a class="button" href="{{ url_for('add_booking') }}">Create booking</a></div>{% endif %}
 </section>
 {% endblock %}
